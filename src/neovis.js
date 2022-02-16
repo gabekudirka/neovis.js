@@ -390,28 +390,22 @@ export default class NeoVis {
 							layout: {
 								improvedLayout: false,
 								hierarchical: {
-									enabled: this._config.hierarchical || false,
-									sortMethod: this._config.hierarchical_sort_method || 'hubsize'
+									enabled: false,
+									sortMethod: 'hubsize'
 								}
 							},
-							physics: { // TODO: adaptive physics settings based on size of graph rendered
-								// enabled: true,
-								// timestep: 0.5,
-								// stabilization: {
-								//     iterations: 10
-								// }
-
-								adaptiveTimestep: true,
-								// barnesHut: {
-								//     gravitationalConstant: -8000,
-								//     springConstant: 0.04,
-								//     springLength: 95
-								// },
-								stabilization: {
-									iterations: 200,
-									fit: true
-								}
-							}
+							physics: {
+								forceAtlas2Based: {
+								  gravitationalConstant: -126,
+								  springLength: 200,
+								  springConstant: 0.01
+								},
+								maxVelocity: 50,
+								solver: "forceAtlas2Based",
+								timestep: 0.35,
+								stabilization: true
+							  },
+							
 						};
 
 						const container = this._container;
