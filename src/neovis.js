@@ -195,8 +195,7 @@ export default class NeoVis {
 		} else {
 			try {
 				if (neo4jNode.properties[communityKey]) {
-					node.group = neo4jNode.properties[communityKey].toNumber() || label || 0;  // FIXME: cast to Integer
-
+					node.group = parseInt(neo4jNode.properties['classification']) || label || 0; 
 				} else {
 					node.group = 0;
 				}
@@ -400,9 +399,9 @@ export default class NeoVis {
 								  springLength: 200,
 								  springConstant: 0.01
 								},
-								maxVelocity: 50,
+								maxVelocity: 100,
 								solver: "forceAtlas2Based",
-								timestep: 0.35,
+								timestep: 0.7,
 								stabilization: true
 							  },
 							
@@ -414,8 +413,8 @@ export default class NeoVis {
 							edges: new vis.DataSet(Object.values(this._edges))
 						};
 
-						this._consoleLog(this._data.nodes);
-						this._consoleLog(this._data.edges);
+						this._consoleLog(Object.values(this._nodes));
+						this._consoleLog(Object.values(this._edges));
 
 						// Create duplicate node for any this reference relationships
 						// NOTE: Is this only useful for data model type data
@@ -438,7 +437,7 @@ export default class NeoVis {
 						() => {
 							this._network.stopSimulation();
 						},
-						10000
+						15000
 					);
 					this._events.generateEvent(CompletionEvent, { record_count: recordCount });
 
