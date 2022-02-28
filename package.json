@@ -5,7 +5,6 @@
   "main": "./dist/neovis.js",
   "module": "./dist/neovis-without-dependencies.js",
   "types": "./index.d.ts",
-  "type": "module",
   "directories": {
     "doc": "doc",
     "example": "examples",
