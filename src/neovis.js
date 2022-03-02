@@ -172,10 +172,10 @@ export default class NeoVis {
 					node.value = sizeProp.toNumber();
 				} else {
 					// couldn't convert to Number, use default
-					node.value = 1.0;
+					node.value = 10.0;
 				}
 			} else {
-				node.value = 1.0;
+				node.value = 10.0;
 			}
 		}
 
