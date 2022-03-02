@@ -172,10 +172,10 @@ export default class NeoVis {
 					node.value = sizeProp.toNumber();
 				} else {
 					// couldn't convert to Number, use default
-					node.value = 10.0;
+					node.value = 15.0;
 				}
 			} else {
-				node.value = 10.0;
+				node.value = 15.0;
 			}
 		}
 
@@ -191,11 +191,11 @@ export default class NeoVis {
 		// community
 		// behavior: color by value of community property (if set in config), then color by label
 		if (!communityKey) {
-			node.group = label;
+			node.group = 0;
 		} else {
 			try {
 				if (neo4jNode.properties[communityKey]) {
-					node.group = parseInt(neo4jNode.properties['classification']) || label || 0; 
+					node.group = parseInt(neo4jNode.properties[communityKey]) || label || 0; 
 				} else {
 					node.group = 0;
 				}
@@ -226,6 +226,16 @@ export default class NeoVis {
 		}
 
 		return node;
+	}
+
+	encode(msg) {
+		if (msg) {
+			for (var i = 0; i < msg.length; i++) {
+				let msgToInt = msg.charCodeAt(i);
+				result += String.fromCharCode(msgToInt);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -263,8 +273,6 @@ export default class NeoVis {
 		}
 
 		// set caption
-
-
 		if (typeof captionKey === 'boolean') {
 			if (!captionKey) {
 				edge.label = '';
@@ -280,6 +288,14 @@ export default class NeoVis {
 		} else {
 			edge.label = r.type;
 		}
+
+		// set color
+		if (edge.label === 'HAS_INCOMING_TRANSACTION') {
+			edge.color = '#0a81ff';
+		} else if (edge.label === 'HAS_OUTGOING_TRANSACTION') {
+			edge.color = '#ade3a8';
+		}
+
 		return edge;
 	}
 
