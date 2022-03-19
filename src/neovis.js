@@ -453,7 +453,7 @@ export default class NeoVis {
 						() => {
 							this._network.stopSimulation();
 						},
-						15000
+						10000
 					);
 					this._events.generateEvent(CompletionEvent, { record_count: recordCount });
 
