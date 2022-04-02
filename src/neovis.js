@@ -185,7 +185,20 @@ export default class NeoVis {
 		} else if (captionKey && (typeof neo4jNode.properties[captionKey] === 'number' || Neo4j.isInt(neo4jNode.properties[captionKey]))) {
 			node.label = neo4jNode.properties[captionKey].toString() || '';
 		} else {
-			node.label = neo4jNode.properties[captionKey] || label || '';
+			try {
+				if (captionKey === 'classification') {
+					var status = neo4jNode.properties['userReviewStatus'];
+					if(status === 'confirmed' || status === 'rejected') {
+						node.label = neo4jNode.properties[captionKey] + ': ' + status || label || '';
+					} else {
+						node.label = neo4jNode.properties[captionKey] || label || '';
+					}
+				} else {
+					node.label = neo4jNode.properties[captionKey] || label || '';
+				}
+			} catch (e) {
+				node.label = '';
+			}
 		}
 
 		// community
@@ -194,12 +207,16 @@ export default class NeoVis {
 			node.group = 0;
 		} else {
 			try {
-				if (neo4jNode.properties[communityKey]) {
-					node.group = parseInt(neo4jNode.properties[communityKey]) || label || 0; 
+				var community = neo4jNode.properties[communityKey];
+				if (communityKey === 'userReviewStatus') {
+					if (community === 'confirmed' || community === 'rejected') {
+						node.group = community;
+					} else {
+						node.group = 'unknown';
+					}
 				} else {
-					node.group = 0;
+					node.group = label;
 				}
-
 			} catch (e) {
 				node.group = 0;
 			}
@@ -208,7 +225,21 @@ export default class NeoVis {
 		node.title = '';
 		for (const key of title_properties) {
 			if (neo4jNode.properties.hasOwnProperty(key)) {
-				node.title += this.propertyToString(key, neo4jNode.properties[key]);
+				var formattedKey = key;
+				if (key === 'transactionId') {
+					formattedKey = 'Transaction ID';
+				} else if (key === 'userReviewStatus') {
+					formattedKey = 'Transaction Status';
+				} else if (key === 'classification') {
+					formattedKey = 'Classification';
+				} else if (key === 'ip') {
+					formattedKey = 'IP Address';
+				} else if (key === 'group') {
+					formattedKey = 'Device Group';
+				} else if (key === 'flagged') {
+					formattedKey = 'Is Flagged';
+				}
+				node.title += this.propertyToString(formattedKey, neo4jNode.properties[key]);
 			}
 		}
 
